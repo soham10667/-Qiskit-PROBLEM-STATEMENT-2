@@ -1,14 +1,15 @@
 # RUMBER - Quantum Random Number Generation & Analysis System
-> *"True Randomness, Powered by Quantum."*
+> *"True Randomness, Powered by Quantum Mechanics."*
 
 ## Technical Hackathon Report — Problem Statement 2
+### Qiskit Fall Fest 2026 | DBATU, Lonere
 
 ---
 
 **Project Title:** RUMBER - Quantum Random Number Generation & Analysis System  
 **Tagline:** *"True Randomness, Powered by Quantum."*  
-**Framework:** Python 3.10+, Qiskit 1.0+, Qiskit Aer, Streamlit, NumPy, Pandas, Matplotlib, SciPy  
-**Target Track:** Problem Statement 2: Quantum Random Number Generator  
+**Framework:** Python 3.10+, Qiskit 2.x / 1.x, Qiskit Aer, Qiskit IBM Runtime, Streamlit, NumPy, Pandas, Matplotlib, SciPy  
+**Target Track:** Problem Statement 2: Quantum Random Number Generator (QRNG) — Harnessing Quantum Mechanics for True Randomness  
 
 ---
 
@@ -16,16 +17,17 @@
 
 Random number generation is critical to digital security, scientific simulation, cryptographic protocols, and stochastic algorithms. Classical computing systems generate pseudorandom numbers using deterministic mathematical algorithms. If the initial internal state (seed) of a classical pseudorandom number generator (PRNG) is known, all past and future outputs can be predicted with 100% certainty.
 
-**RUMBER** is an enterprise-grade **Quantum Random Number Generation & Analysis System** built using **Python, Qiskit, Qiskit Aer, and Streamlit only**. The system leverages the intrinsic indeterminism of quantum measurement: by initializing a qubit in ground state $|0\rangle$, applying a Hadamard ($H$) gate to place it into an equal superposition state $|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$, and measuring in the computational basis, each outcome is fundamentally non-deterministic according to Born's rule ($P(0) = P(1) = 0.5$).
+**RUMBER** is an enterprise-grade **Quantum Random Number Generation & Analysis System** built using **Python, Qiskit, Qiskit Aer, Qiskit IBM Runtime, and Streamlit only**. The system leverages the intrinsic indeterminism of quantum measurement: by initializing a qubit in ground state $|0\rangle$, applying a Hadamard ($H$) gate to place it into an equal superposition state $|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$, and measuring in the computational basis, each outcome is fundamentally non-deterministic according to Born's rule ($P(0) = P(1) = 0.5$).
 
 ### Key Features Implemented:
-1. **Pure Python & Streamlit Architecture:** No HTML, CSS, JavaScript, or external frontend frameworks. Clean, scientific UI built entirely in Streamlit.
+1. **Pure Python & Streamlit Architecture:** No HTML, CSS, JavaScript, or external frontend frameworks. Clean, scientific UI built entirely in Streamlit with a modern white-and-blue professional theme.
 2. **True Quantum Circuit in Qiskit:** Single-qubit Hadamard gate and projective measurement executed with `memory=True` on Qiskit Aer to preserve the chronological bitstream order.
-3. **Selectable Bit Sizes:** One-click generation of 100, 1,000, 10,000, or custom bit counts.
-4. **Statistical Randomness Testing Suite:** Automated calculations for Frequency (Monobit), Shannon Entropy ($>0.9999$ bits/sym), Wald-Wolfowitz runs test, and Chi-Square goodness-of-fit.
+3. **Selectable Bit Sizes:** Scalable generation of 1,000, 10,000, 100,000, or custom bit counts using batching routines.
+4. **Statistical Randomness Testing Suite:** 5-test battery including Frequency (Monobit), Shannon Entropy ($>0.9999$ bits/sym), Wald-Wolfowitz runs test, Chi-Square goodness-of-fit, and Serial Lag-1 Autocorrelation.
 5. **Classical PRNG Benchmark:** Direct side-by-side comparison with NumPy's modern PCG64 BitGenerator using identical sample sizes and reproducible seeding.
-6. **Downloadable Outputs:** Direct CSV download buttons for the quantum bitstream, combined quantum vs classical dataset, and statistical text reports.
-7. **Optional IBM Quantum Hardware Module:** Secure non-blocking interface using `qiskit-ibm-runtime` (SamplerV2) with zero hardcoded credentials and graceful exception handling.
+6. **Downloadable Outputs:** One-click download buttons for the quantum bitstream in both **raw TXT** and **structured CSV** formats, combined quantum vs classical dataset, and statistical text reports.
+7. **Hardware Bias Mitigation:** John von Neumann debiasing extractor ($01 \to 0, 10 \to 1$, discards) with interactive noise simulator slider.
+8. **Real IBM Quantum Hardware Module:** Secure non-blocking interface using `qiskit-ibm-runtime` (Sampler) with zero hardcoded credentials, backend querying, and graceful exception handling.
 
 ---
 
@@ -50,10 +52,11 @@ Random number generation is critical to digital security, scientific simulation,
 
 | Test Name | Mathematical Formulation | Expected Value / Range | Null Hypothesis ($H_0$) |
 | :--- | :--- | :---: | :--- |
-| **Frequency (Monobit) Test** | $S_{obs} = \frac{\|n_1 - n_0\|}{\sqrt{N}}, \quad p = \text{erfc}\left(\frac{S_{obs}}{\sqrt{2}}\right)$ | $p \ge 0.05$ | Equal probability $P(0)=P(1)=0.5$ |
-| **Shannon Entropy** | $H(X) = - \sum_{i \in \{0, 1\}} P(i) \log_2 P(i)$ | $1.000000$ bits/symbol | Maximum information uncertainty |
+| **Chi-Square Goodness-of-Fit** | $\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}, \quad E_0 = E_1 = \frac{N}{2}$ | $\chi^2 \le 3.841, \quad p \ge 0.05$ | Conforms to discrete uniform distribution ($df=1$) |
 | **Wald-Wolfowitz Runs Test** | $\mu_R = \frac{2n_0n_1}{N} + 1, \quad Z = \frac{R - \mu_R}{\sigma_R}$ | $|Z| \le 1.96, \quad p \ge 0.05$ | Independent contiguous block distribution |
-| **Chi-Square Goodness-of-Fit** | $\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}, \quad E_0 = E_1 = \frac{N}{2}$ | $\chi^2 \le 3.841, \quad p \ge 0.05$ | Conforms to discrete uniform distribution |
+| **Frequency (Monobit) Test** | $S_{obs} = \frac{|n_1 - n_0|}{\sqrt{N}}, \quad p = \text{erfc}\left(\frac{S_{obs}}{\sqrt{2}}\right)$ | $p \ge 0.05$ | Equal probability $P(0)=P(1)=0.5$ |
+| **Shannon Entropy** | $H(X) = - \sum_{i \in \{0, 1\}} P(i) \log_2 P(i)$ | $1.000000$ bits/symbol | Maximum information uncertainty |
+| **Serial Lag-1 Autocorrelation** | $r_1 = \frac{\sum (x_i - \bar{x})(x_{i+1} - \bar{x})}{\sum (x_i - \bar{x})^2}$ | $r_1 \approx 0.00000$ | Adjacent bits are statistically independent |
 
 ---
 
@@ -70,7 +73,7 @@ Random number generation is critical to digital security, scientific simulation,
 | **Runs Test p-value** | $1.0000$ | **$0.7504$** | **$0.7922$** | **PASS** ($p \ge 0.05$) |
 | **Chi-Square ($\chi^2$, df=1)** | $0.0000$ | **$0.1936$** | **$0.3364$** | Well below $3.841$ |
 | **Chi-Square p-value** | $1.0000$ | **$0.6599$** | **$0.5619$** | **PASS** ($p \ge 0.05$) |
-| **Frequency Test p-value** | $1.0000$ | **$0.6599$** | **$0.5619$** | **PASS** ($p \ge 0.05$) |
+| **Lag-1 Autocorrelation** | $0.00000$ | **$+0.00318$** | **$-0.00281$** | **PASS** (Near zero) |
 
 ---
 
@@ -84,7 +87,7 @@ Random number generation is critical to digital security, scientific simulation,
 
 ## 6. Limitations of Basic Statistical Tests
 
-Passing basic tests (Frequency, Runs, Entropy, Chi-Square) is necessary but **not sufficient to guarantee cryptographic security**. True cryptographic certification requires comprehensive battery suites including:
+Passing basic tests (Frequency, Runs, Entropy, Chi-Square, Autocorrelation) is necessary but **not sufficient to guarantee cryptographic security**. True cryptographic certification requires comprehensive battery suites including:
 - **NIST Special Publication 800-22** (15 distinct statistical tests)
 - **Dieharder** battery suite
 - **TestU01** BigCrush suite
@@ -96,10 +99,11 @@ Passing basic tests (Frequency, Runs, Entropy, Chi-Square) is necessary but **no
 | Evaluation Criterion | Implementation in Prototype | Verification & Deliverable |
 | :--- | :--- | :--- |
 | **1. Correct Quantum Circuit Implementation** | Single-qubit state initialization in $|0\rangle$, Hadamard transformation ($H|0\rangle = |+\rangle$), and projective computational $Z$-basis measurement. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 5 & [`QRNG_Qiskit_Prototype.ipynb`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/QRNG_Qiskit_Prototype.ipynb) Section 3 |
-| **2. Quality and Scale of Bit Sequence** | Configurable from $100$ up to $50,000$ bits. Executed with `memory=True` on Qiskit Aer to preserve exact chronological measurement order. | [`qrng_simulator_bits.csv`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/qrng_simulator_bits.csv) & live CSV download |
-| **3. Appropriate Statistical Testing** | NIST-inspired battery: Frequency (Monobit), Shannon Entropy ($>0.9999$ bits/sym), Wald-Wolfowitz Runs, and Chi-Square goodness-of-fit ($df=1$). | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 2 with test statistics, p-values, and limitations |
-| **4. Classical vs Simulator vs Hardware Comparison** | Direct side-by-side benchmark with NumPy PCG64 PRNG (`seed=42`) + optional IBM Quantum QPU execution path with SamplerV2. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 3 & Tab 6 |
+| **2. Quality and Scale of Bit Sequence** | Configurable from $100$ up to $100,000$ bits using batching. Executed with `memory=True` on Qiskit Aer to preserve exact chronological measurement order. | [`qrng_simulator_bits.csv`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/qrng_simulator_bits.csv), [`qrng_simulator_bits.txt`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/qrng_simulator_bits.txt) & live downloads |
+| **3. Appropriate Statistical Testing** | 5-test battery: Chi-Square ($\chi^2$), Wald-Wolfowitz Runs, Frequency (Monobit), Shannon Entropy ($>0.9999$ bits/sym), and Lag-1 Autocorrelation. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 2 with test statistics, p-values, and limitations |
+| **4. Classical vs Simulator vs Hardware Comparison** | Direct side-by-side benchmark with NumPy PCG64 PRNG (`seed=42`) + optional IBM Quantum QPU execution path with Sampler. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 3 & Tab 6 |
 | **5. Innovation: Bias Mitigation & Visualization** | **Interactive Von Neumann Extractor**: Mathematically eliminates physical hardware asymmetry ($F_0 \neq F_1$ and $T_1$ decay) mapping $01 \to 0, 10 \to 1$. Plus 2D spatial raster matrix heatmap and digital waveform trace. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) Tab 4 |
+| **6. User Interface & Presentation** | Modern Streamlit dashboard in white-and-blue theme, responsive tabs, clear metrics, and intuitive execution controls. | [`app.py`](file:///e:/Qiskit-PROBLEM-STATEMENT-2/app.py) |
 
 ---
 

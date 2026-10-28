@@ -1,1 +1,13 @@
 .ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Streamlit secrets and credentials
+.streamlit/secrets.toml
+.streamlit/*secrets*.toml
+.env
+*.token
